@@ -11,7 +11,7 @@ import shutil
 import os
 
 from app.data_loader import load_vehicle_data
-from app.gemini_wrapper import ask_model, generate_title_from_model, handle_voice_query
+from app.llm_wrapper import run_llm_query, generate_title_from_model, handle_voice_query
 from app.order_loader import dump_orders_to_json
 from app.order_vector import build_order_index
 from app.rag_engine import RAGEngine
@@ -76,10 +76,7 @@ class TitleResponse(BaseModel):
 @app.post("/chat", response_model=QueryOutput)
 def chat(user_input: QueryInput):
     global rag, raw_items, item_chunks
-
-    all_names = [item['name'] for item in raw_items]
-    response = ask_model(user_input.query, item_chunks, raw_items, all_names)
-
+    response = run_llm_query(user_input.query, item_chunks)
     return {"response": [response]}
 
 
