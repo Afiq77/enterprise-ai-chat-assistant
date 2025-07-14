@@ -4,7 +4,7 @@ import re
 import numpy as np
 from app.embedder import Embedder
 from app.vector_store import VectorStore
-from app.gemini_wrapper import ask_model
+from app.llm_wrapper import run_llm_query
 from app.order_formatter import format_order_record
 from app.order_filter import filter_orders
 
@@ -42,7 +42,6 @@ class RAGEngine:
         if not self.is_loaded:
             return ["⚠ Knowledge base not loaded yet."]
 
-        # === Order query via order number pattern ===
         extracted_orderno = self.extract_orderno(user_query)
         if extracted_orderno:
             for chunk in self.text_chunks:
@@ -52,11 +51,10 @@ class RAGEngine:
                     for k, v in [part.split(":", 1)]
                 }
                 if fields.get("orderno", "").lower() == extracted_orderno.lower():
-                    return [ask_model(user_query, [chunk])]
+                    return [run_llm_query(user_query, [chunk])]
 
             return [f"No order found with order number {extracted_orderno}"]
 
-        # === Filter and summarize relevant orders ===
         if self.raw_orders:
             filtered, summary = filter_orders(self.raw_orders, user_query)
             if not filtered:
