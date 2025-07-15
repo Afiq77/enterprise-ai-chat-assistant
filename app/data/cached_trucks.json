@@ -1,0 +1,19 @@
+[
+  {
+    "name": "6789 LRA",
+    "last_update": {
+      "spd": 45,
+      "ang": 90,
+      "lat": 24.7136,
+      "lng": 46.6753
+    },
+    "driver": {
+      "name": "Ali Khan",
+      "phone": "+966123456789"
+    },
+    "profile": {
+      "fuel_type": "diesel",
+      "plate_number": "XYZ1234"
+    }
+  }
+]
